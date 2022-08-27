@@ -1,0 +1,77 @@
+//First Class
+
+package com.SambitAutomation;
+
+import org.testng.annotations.Test;
+
+@Test (groups= {"all"})
+public class NewTest {
+	
+	@Test (groups= {"smoke","sanity","windows.smoke"})
+	public void test1() {
+		System.out.println("test1");
+	}
+	
+	@Test(groups= {"regression","sanity", "windows.sanity", "ios.sanity"})
+	public void test2() {
+		System.out.println("test2");
+	}
+	
+	@Test
+	public void test3() {
+		System.out.println("test3");
+	}
+}
+
+//Second Class
+
+package com.SambitAutomation;
+
+import org.testng.annotations.Test;
+
+public class NewTest2 {
+	@Test(groups= {"smoke"})
+	public void test4() {
+		System.out.println("test4");
+	}
+
+	@Test(groups= {"smoke","functional","sanity", "ios.smoke"})
+	public void test5() {
+		System.out.println("test5");
+	}
+
+	@Test(groups= {"functional", "regression","windows.functional","ios.functional"})
+	public void test6() {
+		System.out.println("test6");
+	}
+
+	@Test
+	public void test7() {
+		System.out.println("test7");
+	}
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+
+//xml file
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="suite">
+	<groups>
+		<run>
+			<include name="windows.*" />
+		</run>
+	</groups>
+	<test name="test1">
+		<classes>
+			<class name="com.SambitAutomation.NewTest" />
+		</classes>
+	</test>
+	<test name="test2">
+		<classes>
+			<class name="com.SambitAutomation.NewTest2" />
+		</classes>
+	</test>
+</suite>
