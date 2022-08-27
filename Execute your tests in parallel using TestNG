@@ -1,0 +1,132 @@
+//first Class
+package com.SambitAutomation.parallelTest;
+
+import org.testng.annotations.Test;
+
+public class TestClass1 {
+
+	@Test
+	public void testMethod1() {
+		System.out.println("TestClass1 >> testMethod1 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod2() {
+		System.out.println("TestClass1 >> testMethod2 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod3() {
+		System.out.println("TestClass1 >> testMethod3 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod4() {
+		System.out.println("TestClass1 >> testMethod4 >> " +Thread.currentThread().getId());
+	}
+}
+
+//Second Class
+
+package com.SambitAutomation.parallelTest;
+
+import org.testng.annotations.Test;
+
+public class TestClass2 {
+
+	@Test
+	public void testMethod5() {
+		System.out.println("TestClass2 >> testMethod4 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod6() {
+		System.out.println("TestClass2 >> testMethod6 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod7() {
+		System.out.println("TestClass2 >> testMethod7 >> " +Thread.currentThread().getId());
+	}
+	
+}
+
+//Third Class
+
+package com.SambitAutomation.parallelTest;
+
+import org.testng.annotations.Test;
+
+public class TestClass3 {
+
+	@Test
+	public void testMethod8() {
+		System.out.println("TestClass3 >> testMethod8 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod9() {
+		System.out.println("TestClass3 >> testMethod9 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod10() {
+		System.out.println("TestClass3 >> testMethod10 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod11() {
+		System.out.println("TestClass3 >> testMethod11 >> " +Thread.currentThread().getId());
+	}
+}
+
+//Forth Class
+
+package com.SambitAutomation.parallelTest;
+
+import org.testng.annotations.Test;
+
+public class TestClass4 {
+
+	@Test
+	public void testMethod8() {
+		System.out.println("TestClass4 >> testMethod8 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod9() {
+		System.out.println("TestClass4 >> testMethod9 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod10() {
+		System.out.println("TestClass4 >> testMethod10 >> " +Thread.currentThread().getId());
+	}
+	
+	@Test
+	public void testMethod11() {
+		System.out.println("TestClass4 >> testMethod11 >> " +Thread.currentThread().getId());
+	}
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+//xml file
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="classes" thread-count="2">
+	<test name="Test1" >
+		<classes>
+			<class name="com.SambitAutomation.parallelTest.TestClass1" />
+			<class name="com.SambitAutomation.parallelTest.TestClass2" />
+			<class name="com.SambitAutomation.parallelTest.TestClass3" />
+		</classes>
+	</test> <!-- Test -->
+	<test name="Test2" >
+		<classes>
+			<class name="com.SambitAutomation.parallelTest.TestClass4" />
+		</classes>
+	</test> <!-- Test -->
+
+</suite> <!-- Suite -->
