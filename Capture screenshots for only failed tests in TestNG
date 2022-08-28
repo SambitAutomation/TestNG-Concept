@@ -1,0 +1,164 @@
+// Base class
+
+package com.SambitAutomation.screenshots;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class BaseTest {
+	public static WebDriver driver;
+	public static String screenshotsSubFolderName;
+	
+	@BeforeTest
+	public void setup() {
+		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+	}
+
+	@AfterMethod
+	public void screenshotCapture(ITestResult result) {
+		if(result.getStatus() == ITestResult.FAILURE) {
+			captureScreenshot(result.getTestContext().getName()+ "_" +result.getMethod().getMethodName()+".jpg");
+		}
+	}
+	
+	@AfterTest
+	public void teardown() {
+		driver.quit();
+	}
+	
+	public void captureScreenshot(String fileName) {
+		if(screenshotsSubFolderName == null) {
+			LocalDateTime myDateObj = LocalDateTime.now();
+		    DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("ddMMyyyyHHmmss");
+		    screenshotsSubFolderName = myDateObj.format(myFormatObj);
+		}
+		
+		TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+		File sourceFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+		File destFile = new File("./Screenshots/"+ screenshotsSubFolderName+"/"+fileName);
+		try {
+			FileUtils.copyFile(sourceFile, destFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Screenshot saved successfully");
+	}
+}
+
+//Test Class
+
+package com.SambitAutomation.screenshots;
+
+import static org.testng.Assert.assertEquals;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+public class TestClass extends BaseTest{
+
+	@Test(testName = "TestGoogle")
+	public void TestGoogle() throws Exception {
+		driver.get("https://www.google.com/");
+		driver.findElement(By.name("q")).sendKeys("HYR Tutorials", Keys.ENTER);
+		String expectedTitle = "HYR Tutorials - Google Search";
+		String actualTitle = driver.getTitle();
+		assertEquals(actualTitle, expectedTitle, "Title is mismatched");
+	}
+
+	@Test(testName = "TestFacebook")
+	public void TestFacebook() throws Exception {
+		driver.get("https://www.facebook.com/");
+		driver.findElement(By.name("email")).sendKeys("HYR Tutorials", Keys.ENTER);
+		
+		SoftAssert softAssert = new SoftAssert();
+		//Title Assertion
+		String actualTitle = driver.getTitle();
+		String expectedTitle = "Log in to Facebook";
+		softAssert.assertEquals(actualTitle, expectedTitle, "Title is mismatched");
+		
+		//URL Assertion
+		String actualUrl = driver.getCurrentUrl();
+		String expectedUrl = "https://www.facebook.com/";
+		softAssert.assertEquals(actualUrl, expectedUrl, "URL is mismatched");
+		
+		//Text Assertion
+		String actualText = driver.findElement(By.name("email")).getAttribute("value");
+		String expectedText = "";
+		softAssert.assertEquals(actualText, expectedText, "Username text is mismatched");
+		
+		//Border Assertion
+		String actualBorder = driver.findElement(By.name("email")).getCssValue("border");
+		String expectedBorder = "1px solid rgb(240, 40, 73)";
+		softAssert.assertEquals(actualBorder, expectedBorder, "Username border is mismatched");
+		
+		//ErrorMessage Assertion
+		String actualErrorMessage = driver.findElement(By.xpath("(//div[@id='email_container']/div)[last()]")).getText();
+		String expectedErrorMessage = "The email address or mobile number you entered isn't connected to an account. Find your account and log in.";
+		softAssert.assertEquals(actualErrorMessage, expectedErrorMessage, "Username error message is mismatched");
+		
+		softAssert.assertAll();
+	}
+	
+	@Test(testName = "TestOrangeHRM")
+	public void TestOrangeHRM() throws Exception {
+		driver.get("https://opensource-demo.orangehrmlive.com/");
+		driver.findElement(By.id("txtUsername")).sendKeys("Admin");
+		driver.findElement(By.id("txtPassword")).sendKeys("admin1234");
+		driver.findElement(By.id("btnLogin")).click();
+		Assert.assertTrue(driver.findElement(By.id("welcome")).isDisplayed());
+	}
+}
+
+-------------------------------------------------------------------------------------------------------
+
+//xml file
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+	<test name="Test1">
+		<classes>
+			<class name="com.SambitAutomation.screenshots.TestClass">
+				<methods>
+					<include name="TestGoogle" />
+				</methods>
+			</class>
+		</classes>
+	</test> <!-- Test -->
+	<test name="Test2">
+		<classes>
+			<class name="com.SambitAutomation.screenshots.TestClass">
+				<methods>
+					<include name="TestFacebook" />
+				</methods>
+			</class>
+		</classes>
+	</test> <!-- Test -->
+	<test name="Test3">
+		<classes>
+			<class name="com.SambitAutomation.screenshots.TestClass">
+				<methods>
+					<include name="TestOrangeHRM" />
+				</methods>
+			</class>
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
